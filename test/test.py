@@ -1,8 +1,10 @@
-from main import parse_format
-from main import parse_data
-from main import convert_to_bit
-from main import convert_to_dec
+from ipcalc import parse_data
+from ipcalc import parse_format
+from ipcalc import convert_to_dec
+from ipcalc import convert_to_bit
 
+
+print ("START")
 input_parse_format=["10.191.170.29/22","10.191.170.2922"]
 res_parse_format=[1,0]
 input_parse_data=["10.191.170.29/22","10.191.170.2922","10.191.170./22","10.191.-170.29/22","10.191.500.29/22","10.191.A.29/22"]
