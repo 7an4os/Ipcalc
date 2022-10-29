@@ -39,9 +39,9 @@ def parse_data(input): # Проверка самих данных
     elif(parse_format(input)[1]==0):
         if (mask.isdigit()==True):
             if (int(mask)>32):
-                res=11
+                sys.exit("выход за пределы допустимого значения")
         else:
-            res=10
+            sys.exit("в октете не числолибо значение меньше 0")
     mask_bit_res = ""
     if (parse_format(input)[1] == 0):
         for i in range(0, 32):
@@ -56,17 +56,17 @@ def parse_data(input): # Проверка самих данных
     mask_octets=mask_bit_res
 ## Обработка октетов
     if (len(octets)<4 and len(mask_octets)<4):
-        res=20
+        sys.exit("недостаточное количество октетов")
     else:
         for i in range (0,4):
             if (octets[i]=="" or mask_octets[i]==""):
-                return 21
+                sys.exit("пустой октет")
             digit_a=octets[i].isdigit()
             digit_m=mask_octets[i].isdigit()
             if (digit_a==False or digit_m==False):
-                return 22
+                sys.exit("в октете не число либо значение меньше 0")
             elif(int(octets[i])>255 or int(mask_octets[i])>255):
-                return 23
+                sys.exit("выход за пределы допустимого значения")
             elif(int(octets[i])==0 or int(octets[i])==255):
                 return 1
             else:
@@ -79,9 +79,8 @@ def parse_data(input): # Проверка самих данных
                         else:
                             break
                     mask_check_dec = convert_to_dec(mask_check_bit)
-                    print(mask_check_dec)
                     if (int(mask_octets[i]) != mask_check_dec):
-                        return 24
+                        sys.exit("значение октета маски неверно, должно равняться сумме степеней 2")
 
     return res
 def convert_to_bit(input): #перевод в биты
@@ -112,31 +111,12 @@ def convert_to_dec(input): #перевод в дес
     for i in range(0,len(input),1):
         res=res+(int(input[i])*(2**abs(i-(len(input)-1))))
     return res
-def main():
-    print("Введите ip и маску в формате X.X.X.X/M")
-    # input=input()
-    input = "10.191.170.29/24"
-    # input="10.191.170.29/55"
+def main(input):
     check_format = parse_format(input)
     if (check_format[0] == 0):
         sys.exit("Неверный формат")
     else:
-        err_data = parse_data(input)
-    # print (err_data)
-    if (err_data == 10):
-        sys.exit("маска не число либо значение меньше 0")
-    elif (err_data == 12):
-        sys.exit("выход за пределы допустимого значения")
-    elif (err_data == 20):
-        sys.exit("недостаточное количество октетов")
-    elif (err_data == 21):
-        sys.exit("пустой октет")
-    elif (err_data == 22):
-        sys.exit("в октете не числолибо значение меньше 0")
-    elif (err_data == 23):
-        sys.exit("выход за пределы допустимого значения")
-    elif (err_data == 24):
-        sys.exit("значение октета маски неверно")
+        parse_data(input)
     addr_mask = input.split("/")
     octets = addr_mask[0].split(".")
     mask = addr_mask[1]
@@ -160,7 +140,6 @@ def main():
     hosts = convert_to_dec(quantity_bit) - 1
     ##перевод адреа в биты
     addr_bit = ""
-    print(octets)
     for i in range(0, len(octets)):
         addr_bit += convert_to_bit(octets[i])
     ##wildcard
@@ -222,6 +201,6 @@ def main():
         net_dec_res[3] + 1))
 
 if __name__ == '__main__':
-    sys.exit(main())
-
-
+    print("Введите ip и маску в формате X.X.X.X/M или X.X.X.X/Y.Y.Y.Y")
+    input=input()
+    main(input)
